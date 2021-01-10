@@ -1,4 +1,5 @@
 class MessagesController < ApplicationController
+before_action :set_message, only: [:show, :edit, :update, :destroy]
     def index
         @messages = Message.all
     end
@@ -8,11 +9,11 @@ class MessagesController < ApplicationController
     end
     
     def new
-        @messages = Message.new
+        @message = Message.new
     end
     
     def create
-        @messages = Message.new(message_params)
+        @message = Message.new(message_params)
         if @message.save
             flash[:success] = 'Messageが正常に投稿されました'
             redirect_to @message
@@ -23,12 +24,9 @@ class MessagesController < ApplicationController
     end
     
     def edit
-        @message = Message.find(params[:id])
     end
     
     def update
-        @message = Message.find(params[:id])
-        
         if @message.update(message_params)
             flash[:success] = 'Messageは正常に更新されました'
             redirect_to @message
@@ -39,12 +37,15 @@ class MessagesController < ApplicationController
     end
     
     def destroy
-        @message = Message.find(params[:id])
         @message.destroy
         
         flash[:success] = 'Messageは正常に削除されました'
         redirect_to messages_url
     end
+end
+
+def set_message
+    @message = Message.find(params[:id])
 end
 
 def message_params
